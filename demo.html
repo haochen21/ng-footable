@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html ng-app="demoApp">
+
+<head lang="en">
+<meta charset="UTF-8">
+<title>netcareTable</title>
+<script src="lib/angular.min.js"></script>
+<script src="js/ngfootable.js"></script>
+<script src="js/ngfootablePagination.js"></script>
+<link href="css/bootstrap.css" rel="stylesheet"/>
+<link href="css/bootstrap-theme.css" rel="stylesheet"/>
+<link href="css/font-awesome.css" rel="stylesheet"/>
+<link href="css/ngfootable.css" rel="stylesheet"/>
+<script>
+angular.module("demoApp", ['ngFootable', 'ngFootablePagination'])
+        .controller("demoCtrl", function ($scope, $timeout,ngFootableEvent, ngFootablePageEvent,ngFootablePageSize) {
+             // set pagination,property name is pagination!
+            $scope.pagination = { };
+
+            //checkbox column,items is index in collection
+            $scope.checkboxes = { 'checked': false, items: {} };
+
+            $scope.circuits = null;
+
+            $scope.listCircuits = function () {
+
+                $scope.pagination.itemSize = 12309;
+                $scope.pagination.pageSize = ngFootablePageSize;
+                $scope.pagination.pageNumber = Math.ceil($scope.pagination.itemSize / $scope.pagination.pageSize);
+                $scope.pagination.currentPage = 1;
+                $scope.pagination.lastPage = $scope.pagination.pageNumber;
+
+                $scope.circuits = [
+                    {
+                        "id": "124407",
+                        "no": "21T030821",
+                        "fault": true,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "DPLC",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:10:41",
+                        "customer": "中国工商银行股份有限公司上海市分行",
+                        "statusLog": "2013-11-19 10:19:38 系统自动把状态改为正常",
+                        "aMe": "11776-中国工商银行股份有限公司上海市分行",
+                        "zMe": "12616-中国建设银行股份有限公司上海市分行信息技术部",
+                        "aPort": "13-N4EFS0-8",
+                        "zPort": "3-EFS-1",
+                        "alarm": true
+                    },
+                    {
+                        "id": "124410",
+                        "no": "00T030822",
+                        "fault": true,
+                        "groupNo": "SHI/CU-FFT/CU NP002",
+                        "resRate": "1M",
+                        "resStatus": "占用",
+                        "serviceType": "IPLC",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:12:08",
+                        "customer": "国家外汇管理局中央外汇业务中心",
+                        "statusLog": "2013-11-14 02:25:02 系统自动把状态改为正常<br/>2014-10-21 08:44:00 手动改变电路状态备份<br/>2014-10-21 09:41:22 系统自动把状态改为正常",
+                        "aMe": "12890-国家外汇管理局（钻石）",
+                        "zMe": "11050-金桥汇聚扩2",
+                        "aPort": "8-R2PD1-4",
+                        "zPort": "3-N1SLH1-2",
+                        "alarm": true
+                    },
+                    {
+                        "id": "134574",
+                        "no": "21V000324",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "VOIP",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:08:38",
+                        "customer": "中国工商银行票据营业部",
+                        "statusLog": "",
+                        "aMe": "488-建爱大厦数据备份",
+                        "zMe": "51-市北扩1",
+                        "aPort": "7-PD1-26",
+                        "zPort": "3-PQ1-51",
+                        "alarm": false
+                    },
+                    {
+                        "id": "124413",
+                        "no": "00T030823",
+                        "fault": true,
+                        "groupNo": "SHI/CU-LDN/CU NP005",
+                        "resRate": "",
+                        "resStatus": "占用",
+                        "serviceType": "IPLC",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:05:56",
+                        "customer": "国家外汇管理局中央外汇业务中心",
+                        "statusLog": "2013-07-26 11:50:39 系统自动把状态改为正常",
+                        "aMe": "12890-国家外汇管理局（钻石）",
+                        "zMe": "11050-金桥汇聚扩2",
+                        "aPort": "8-R2PD1-5",
+                        "zPort": "3-N1SLH1-2",
+                        "alarm": true
+                    },
+                    {
+                        "id": "104000",
+                        "no": "21D110522",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "MPLS-VPN",
+                        "resBizProperty": "上海分行VPDN电路",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 00:47:21",
+                        "customer": "交通银行股份有限公司上海市分行",
+                        "statusLog": "2013-01-24 09:57:39 fdfd<br/>2013-01-24 09:58:11 zz<br/>2013-08-09 01:21:35 手动改变电路状态备份<br/>2013-08-20 10:12:46 系统自动把状态改为正常",
+                        "aMe": "9995-交行上海分行（漕河泾）（★钻石）",
+                        "zMe": "亚都NGN-NE40E-B",
+                        "aPort": "13-N4EFS0-1",
+                        "zPort": "GigabitEthernet3/1/0",
+                        "alarm": true
+                    },
+                    {
+                        "id": "126455",
+                        "no": "21Z203050EXI",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "30B+D",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:11:49",
+                        "customer": "平安呼叫中心",
+                        "statusLog": "",
+                        "aMe": "市北SSP2设备",
+                        "zMe": "2742-市北核心环扩展架",
+                        "aPort": "4-2-12",
+                        "zPort": "4-PQ1-4",
+                        "alarm": true
+                    },
+                    {
+                        "id": "133219",
+                        "no": "21Z216699VOT",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 00:49:03",
+                        "customer": "PMSCCOD扩容(天平项目)资源申请",
+                        "statusLog": "",
+                        "aMe": "金桥SSP3",
+                        "zMe": "9930-长宁大客户",
+                        "aPort": "3-1-1_2M51",
+                        "zPort": "16-N2SLO1-2",
+                        "alarm": true
+                    },
+                    {
+                        "id": "126460",
+                        "no": "21Z204004EXI",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "语音数字中继",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 00:58:51",
+                        "customer": "2010年平安呼叫中心扩容工程资源申请",
+                        "statusLog": "",
+                        "aMe": "长宁UMG设备",
+                        "zMe": "10121-平安呼叫中心长宁台",
+                        "aPort": "UMG8900框B-1-4-5-2_2M11",
+                        "zPort": "12-N1SLQ1-1",
+                        "alarm": false
+                    },
+                    {
+                        "id": "126461",
+                        "no": "21Z201516VOT",
+                        "fault": false,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "30B+D",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 00:43:42",
+                        "customer": "平安呼叫中心",
+                        "statusLog": "",
+                        "aMe": "乐凯大厦SSP1设备",
+                        "zMe": "2224-乐凯核心环3扩1",
+                        "aPort": "6-7-1",
+                        "zPort": "2-SEP-4",
+                        "alarm": true
+                    },
+                    {
+                        "id": "126465",
+                        "no": "21Z201547VOT",
+                        "fault": true,
+                        "groupNo": "",
+                        "resRate": "2M",
+                        "resStatus": "占用",
+                        "serviceType": "30B+D",
+                        "resBizProperty": "",
+                        "resSyncResult": true,
+                        "bizStatus": "正常",
+                        "updateTime": "2014-10-26 01:16:13",
+                        "customer": "平安呼叫中心",
+                        "statusLog": "",
+                        "aMe": "乐凯大厦SSP1设备",
+                        "zMe": "2224-乐凯核心环3扩1",
+                        "aPort": "6-7-1",
+                        "zPort": "2-SEP-4",
+                        "alarm": true
+                    }
+                ]
+            }
+
+
+
+            $scope.deleteCircuit = function (circuit) {
+                $scope.circuits.splice($scope.circuits.indexOf(circuit), 1);
+            }
+            $scope.createCircuit = function (circuit) {
+                $scope.circuits.push(circuit);
+            }
+
+            $scope.addCircuit = function () {
+                $scope.circuits.push({
+                    "id": "126470",
+                    "no": "21Z204022EXI",
+                    "fault": false,
+                    "groupNo": "",
+                    "resRate": "2M",
+                    "resStatus": "占用",
+                    "serviceType": "语音数字中继",
+                    "resBizProperty": "",
+                    "resSyncResult": true,
+                    "bizStatus": "正常",
+                    "updateTime": "2014-10-26 01:17:46",
+                    "customer": "2010年平安呼叫中心扩容工程资源申请",
+                    "statusLog": "",
+                    "aMe": "长宁UMG设备",
+                    "zMe": "10121-平安呼叫中心长宁台",
+                    "aPort": "UMG8900框B-1-4-5-2_2M29",
+                    "zPort": "12-N1SLQ1-1",
+                    "alarm": false
+                });
+            }
+
+            $scope.showAll = function () {
+                $scope.$broadcast(ngFootableEvent.allRowsExpand);
+            }
+
+            $scope.closeAll = function () {
+                $scope.$broadcast(ngFootableEvent.allRowsCollapse);
+            }
+
+            $scope.listCircuits();
+
+            $scope.selectPage = function(page){
+                console.log(page);
+            };
+
+            $scope.$watch('checkboxes.checked', function(value) {
+                angular.forEach($scope.circuits, function(item,index) {
+                   $scope.checkboxes.items[index] = value;
+                });
+            });
+
+
+            $scope.$watch('checkboxes.items', function(values) {
+                if (!$scope.circuits) {
+                    return;
+                }
+                var checked = 0, unchecked = 0,
+                        total = $scope.circuits.length;
+                angular.forEach($scope.circuits, function(item,index) {
+                    checked   +=  ($scope.checkboxes.items[index]) || 0;
+                    unchecked += (!$scope.checkboxes.items[index]) || 0;
+                });
+                $scope.indeterminate = (checked != 0 && unchecked != 0);
+                if ((unchecked == 0) || (checked == 0)) {
+                    $scope.checkboxes.checked = (checked == total);
+                }
+                // grayed checkbox
+                //angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
+            }, true);
+        })
+        .filter('circuitFaultFilter', function () {
+            return function (value) {
+                if (value) {
+                    return '正常';
+                } else {
+                    return '故障';
+                }
+            };
+        });
+</script>
+</head>
+
+<body ng-controller="demoCtrl">
+<div class="panel panel-default">
+    <div claa="panel-head">{{checkboxes.items}}</div>
+    <div class="panel-body">
+        <table class="table table-bordered table-hover" ng-footable>
+            <thead>
+            <th class="text-center">
+                <div ng-footable-checkbox check-model="checkboxes.checked" ng-class="{'checked-some':indeterminate}"></div>
+            </th>
+            <th data-toggle="true">电路编码</th>
+            <th class="text-center">状态</th>
+            <th data-hide="phone" class="text-center">速率</th>
+            <th data-hide="phone" class="text-center">业务状态</th>
+            <th data-hide="phone" class="text-center">资源状态</th>
+            <th data-hide="phone" class="text-center">业务类型</th>
+            <th data-hide="all">Ａ端网元</th>
+            <th data-hide="all">Ａ端端口</th>
+            <th data-hide="all">Ｚ端网元</th>
+            <th data-hide="all">Ｚ端端口</th>
+            <th data-hide="all" class="text-center">长途编码</th>
+            <th data-hide="all" class="text-center">客户名称</th>
+            <th data-hide="all" class="text-center">告警状态</th>
+            <th data-hide="phone,tablet" class="text-center">操作信息</th>
+            </thead>
+            <tbody>
+            <tr ng-repeat-start="circuit in circuits">
+                <td class="text-center">
+                    <div ng-footable-checkbox check-model="checkboxes.items[$index]"></div>
+                <td>{{circuit.no}}</td>
+                <td class="text-center"><span class="label" ng-class="circuit.fault?'label-danger':'label-info'">{{circuit.fault | circuitFaultFilter}}</span>
+                </td>
+                <td class="text-center">{{circuit.resRate}}</td>
+                <td class="text-center">{{circuit.bizStatus}}</td>
+                <td class="text-center">{{circuit.resStatus}}</td>
+                <td class="text-center">{{circuit.serviceType}}</td>
+                <td class="text-center">{{circuit.aMe}}</td>
+                <td class="text-center">{{circuit.zMe}}</td>
+                <td class="text-center">{{circuit.aPort}}</td>
+                <td class="text-center">{{circuit.zPort}}</td>
+                <td class="text-center">{{circuit.groupNo}}</td>
+                <td class="text-center">{{circuit.customer}}</td>
+                <td class="text-center">{{circuit.alarm}}</td>
+                <td class="text-center">
+                    <button class="btn btn-xs btn-primary" ng-click="deleteCircuit(circuit)">
+                        Delete
+                    </button>
+                    <button class="btn btn-xs btn-primary" ng-click="editOrCreateProduct(item)">
+                        Edit
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr ng-show="pagination.itemSize > 0">
+                <td class="text-center" colspan="{{($columns|filter:{show:true}).length}}">
+                    <ng-footable-pagination
+                            class="ng-footable-pagination"
+                            item-size="pagination.itemSize"
+                            page-num="pagination.pageNumber"
+                            current-page="pagination.currentPage"
+                            on-select-page="selectPage(page)">
+                    </ng-footable-pagination>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+        <p>
+            <button class="btn btn-primary" ng-click="listCircuits()">Load Data
+            </button>
+
+            <button class="btn btn-primary" ng-click="addCircuit()">Add Data
+            </button>
+
+            <button class="btn btn-primary" ng-click="showAll()">show all
+            </button>
+
+            <button class="btn btn-primary" ng-click="closeAll()">close all
+            </button>
+        </p>
+    </div>
+</div>
+</body>
+
+</html>
